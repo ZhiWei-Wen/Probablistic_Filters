@@ -1,0 +1,1 @@
+Rust Implementation of Bloom Filter, Blocked Bloom Filter, Cuckoo Filter, XOR Filter and Binary Fuse Filter. More sound strongly universal hash functions might be needed to reduce the construction/query time.
