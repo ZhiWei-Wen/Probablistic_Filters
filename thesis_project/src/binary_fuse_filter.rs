@@ -102,7 +102,7 @@ impl BFFilter {
         let mut rng = rand::thread_rng();
         let n = original_keys.len();
         let block_size = (4.8*(n as f64).powf(0.58)) as usize;
-        let c = (((1.125*n as f64).floor()/block_size as f64).ceil() * block_size as f64) as usize;
+        let c = (((1.125*n as f64).floor()/block_size as f64).ceil() * block_size as f64) as usize; //make sure it can be divided by block size.
         loop {
             let mut filter = BFFilter {
                 b: vec![0; c],
@@ -117,12 +117,12 @@ impl BFFilter {
                 buffer.push((key,filter.hash(key)));
             }
             buffer.sort_by_cached_key(|key_hash_pair| key_hash_pair.1.0/filter.block_size);
-            //store the hash value in a buffer to reduce needed hash access.
+            //store the hash value in a buffer to reduce needed hash access. sorting algorithm is not the best.
             let (success, stack) = filter.map(buffer);
             if success {
                 filter.assign(stack);
                 return filter;
-            }
+            }//average retry times more than xor, so more "worse" case can happen. average construction time increases.
             // If not successful, loop will continue and try with new seeds
         }
     }

@@ -18,7 +18,7 @@ impl BlockedBloomFilter {
     fn new(num_elements: usize) -> Self {
         let false_positive_rate:f64 = 0.0074;
         let block_size = CACHE_LINE_SIZE_BITS;
-        let total_size = (-1f64 * (num_elements as f64) * false_positive_rate.ln() / f64::ln(2f64).powi(2)).ceil() as usize;// This is 'm', the size of the bit array
+        let total_size = ((-1f64 * (num_elements as f64) * false_positive_rate.ln() / f64::ln(2f64).powi(2)).ceil() * 1.02) as usize;// only 2% space needed to achieve same fpr.
         let num_blocks = ((total_size as f64/block_size as f64).ceil() as usize).max(1);//corner case considered
         let num_hashes = ((total_size/num_elements) as f64 * f64::ln(2f64)).ceil() as usize+1;
         let seeds = (0..num_hashes).map(|_| rand::random::<u64>() | 1).collect();
